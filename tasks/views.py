@@ -12,7 +12,7 @@ def home(request):
     tasks = Task.objects.all()
     return render(request, "tasks/home.html", {"tasks": tasks})
 
-    
+
 
 def complete_task(request, task_id):
     task = Task.objects.get(id=task_id)
