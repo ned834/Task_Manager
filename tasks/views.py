@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Task
+from datetime import date
 
 def home(request):
     if request.method == "POST":
@@ -9,8 +10,14 @@ def home(request):
             Task.objects.create(title=title, due_date=due_date if due_date else None)
         return redirect("/")
 
-    tasks = Task.objects.all()
-    return render(request, "tasks/home.html", {"tasks": tasks})
+    tasks = Task.objects.order_by('completed', 'due_date')
+
+    today = date.today()
+
+    return render(request, "tasks/home.html", {
+        "tasks": tasks,
+        "today": today
+    })
 
 def complete_task(request, task_id):
     task = Task.objects.get(id=task_id)

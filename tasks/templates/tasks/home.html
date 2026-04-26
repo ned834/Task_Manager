@@ -11,6 +11,9 @@
 
 <div class="container mt-5">
     <h1 class="text-center mb-4">📚 Study Planner</h1>
+    <button onclick="toggleDarkMode()" class="btn btn-secondary mb-3">
+        Toggle Dark Mode
+    </button>
 
     <!-- Form -->
     <form method="POST" class="d-flex gap-2 mb-4">
@@ -30,6 +33,17 @@
                         <span class="text-decoration-line-through text-muted">
                             {{ task.title }}
                         </span>
+
+                    {% elif task.due_date and task.due_date < today %}
+                        <span class="text-danger fw-bold">
+                            {{ task.title }} (Overdue)
+                        </span>
+
+                    {% elif task.due_date and task.due_date == today %}
+                        <span class="text-warning fw-bold">
+                            {{ task.title }} (Due Today)
+                        </span>
+
                     {% else %}
                         <span>{{ task.title }}</span>
                     {% endif %}
@@ -51,6 +65,13 @@
         {% endfor %}
     </div>
 </div>
+
+<script>
+    function toggleDarkMode() {
+        document.body.classList.toggle("bg-dark");
+        document.body.classList.toggle("text-light");
+    }
+</script>
 
 </body>
 </html>
