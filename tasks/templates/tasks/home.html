@@ -23,6 +23,20 @@
         <button type="submit" class="btn btn-primary">Add</button>
     </form>
 
+    <div class="mb-3">
+        <a href="/" class="btn btn-sm {% if not current_filter %}btn-primary{% else %}btn-outline-primary{% endif %}">
+            All
+        </a>
+
+        <a href="/?filter=active" class="btn btn-sm {% if current_filter == 'active' %}btn-success{% else %}btn-outline-success{% endif %}">
+            Active
+        </a>
+
+        <a href="/?filter=completed" class="btn btn-sm {% if current_filter == 'completed' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">
+            Completed
+        </a>
+    </div>
+
     <!-- Tasks -->
     <div class="card p-3">
         {% for task in tasks %}
