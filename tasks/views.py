@@ -19,14 +19,13 @@ def home(request):
 
 
     tasks = Task.objects.all()
-    filter_type = request.GET.get("filter")
+    filter_type = request.GET.get("filter", "active")
 
     
-    if filter_type == "active":
-        tasks = tasks.filter(completed=False)
-    elif filter_type == "completed":
-        tasks = tasks.filter(completed=True)
-
+    if filter_type == "completed":
+        tasks = Task.objects.filter(completed=True)
+    else:
+        tasks = Task.objects.filter(completed=False)
     
     tasks = sorted(
         tasks,
@@ -68,3 +67,13 @@ def edit_task(request, task_id):
         return redirect("/")
 
     return render(request, "tasks/edit_task.html", {"task": task})
+
+def recover_task(request, task_id):
+    task = Task.objects.get(id=task_id)
+    task.completed = False
+    task.save()
+    return redirect("/?filter=active")
+
+def complete_all(request):
+    Task.objects.filter(completed=False).update(completed=True)
+    return redirect("/?filter=completed")

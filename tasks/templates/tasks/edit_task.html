@@ -7,36 +7,48 @@
 
 <body class="bg-light">
 
-<div class="container mt-5">
-    <h2 class="mb-4">Edit Task</h2>
+<div class="container mt-5" style="max-width: 700px;">
 
-    <form method="POST">
-        {% csrf_token %}
+    <!-- Title -->
+    <h1 class="text-center mb-4">Edit Task</h1>
 
-        <div class="mb-3">
-            <label class="form-label">Task Title</label>
-            <input 
-                type="text" 
-                name="title" 
-                class="form-control"
-                value="{{ task.title }}"
-                required
-            >
-        </div>
+    <!-- Edit Form -->
+    <div class="card p-4 shadow-sm">
 
-        <div class="mb-3">
-            <label class="form-label">Due Date</label>
-            <input 
-                type="date" 
-                name="due_date" 
-                class="form-control"
-                value="{{ task.due_date|date:'Y-m-d' }}"
-            >
-        </div>
+        <form method="POST">
+            {% csrf_token %}
 
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a href="/" class="btn btn-secondary">Cancel</a>
-    </form>
+            <div class="mb-3">
+                <label class="form-label">Task Title</label>
+                <input 
+                    type="text" 
+                    name="title" 
+                    class="form-control"
+                    value="{{ task.title }}"
+                    required
+                >
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label">Due Date</label>
+                <input 
+                    type="date" 
+                    name="due_date" 
+                    class="form-control"
+                    value="{{ task.due_date|date:'Y-m-d' }}"
+                >
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex justify-content-between">
+                <a href="/" class="btn btn-outline-secondary">Cancel</a>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+
+        </form>
+
+    </div>
+
 </div>
 
 </body>
