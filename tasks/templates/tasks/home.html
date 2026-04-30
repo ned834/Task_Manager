@@ -17,7 +17,7 @@
         <form method="POST" class="row g-2">
             {% csrf_token %}
             
-            <div class="col-6">
+            <div class="col-8">
                 <input type="text" name="title" class="form-control" placeholder="New task..." required>
             </div>
 
@@ -25,14 +25,25 @@
                 <input type="date" name="due_date" class="form-control">
             </div>
 
-            <div class="col-2 d-grid">
-                <button type="submit" class="btn btn-primary">Add</button>
+            <div class="col-12">
+                <textarea 
+                    name="description" 
+                    class="form-control" 
+                    placeholder="Add description (optional)"
+                    rows="3"
+                ></textarea>
+            </div>
+
+            <div class="col-12 d-flex justify-content-center mt-3">
+                <button type="submit" class="btn btn-primary px-4">
+                    Add
+                </button>
             </div>
         </form>
     </div>
 
     <!-- Filters -->
-    <div class="d-flex justify-content-center gap-2 mb-4">
+    <div class="d-flex justify-content-left gap-2 mb-2">
         <a href="/?filter=active"
             class="btn btn-sm {% if current_filter == 'active' %}btn-success{% else %}btn-outline-success{% endif %}">
                 Active
@@ -54,7 +65,7 @@
             <div>
                 {% if task.completed %}
                     <span>
-                        {{ task.title }}
+                        {{ task.title }} 
                     </span>
 
                 {% elif task.due_date and task.due_date < today %}
@@ -64,15 +75,22 @@
 
                 {% elif task.due_date and task.due_date == today %}
                     <span class="text-warning fw-bold">
-                        {{ task.title }} (Due Today)
+                        {{ task.title }} (Due Today) 
                     </span>
 
                 {% else %}
                     <span>{{ task.title }}</span>
                 {% endif %}
+                
+
+                {% if task.description %}
+                    <div class="text-muted small">
+                        {{ task.description }}
+                    </div>
+                {% endif %}
 
                 {% if task.due_date %}
-                    <small class="text-muted ms-2">
+                    <small class="text-muted">
                         {{ task.due_date }}
                     </small>
                 {% endif %}
@@ -82,11 +100,11 @@
             <div class="d-flex gap-2">
 
                 {% if current_filter == "completed" %}
-                    <a href="{% url 'recover' task.id %}" class="btn btn-outline-primary btn-sm">
+                    <a href="{% url 'recover' task.id %}" class="btn btn-outline-primary btn-sm ms-3">
                         Recover
                     </a>
                 {% else %}
-                    <a href="{% url 'complete' task.id %}" class="btn btn-outline-success btn-sm">✔</a>
+                    <a href="{% url 'complete' task.id %}" class="btn btn-outline-success btn-sm ms-3">✔</a>
                     <a href="{% url 'edit' task.id %}" class="btn btn-outline-warning btn-sm">Edit</a>
                     <a href="{% url 'delete' task.id %}" class="btn btn-outline-danger btn-sm">✖</a>
                 {% endif %}

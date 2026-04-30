@@ -9,10 +9,12 @@ def home(request):
     if request.method == "POST":
         title = request.POST.get("title")
         due_date = request.POST.get("due_date")
+        description = request.POST.get("description")
 
         if title:
             Task.objects.create(
                 title=title,
+                description=description,
                 due_date=due_date if due_date else None
             )
         return redirect("/")
@@ -62,6 +64,7 @@ def edit_task(request, task_id):
     if request.method == "POST":
         task.title = request.POST.get("title")
         due_date = request.POST.get("due_date")
+        task.description = request.POST.get("description")
         task.due_date = due_date if due_date else None
         task.save()
         return redirect("/")
