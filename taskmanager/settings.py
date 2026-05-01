@@ -116,3 +116,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+SUPABASE_URL = "https://bzbrktcshwrthhuwrvqk.supabase.co"
+SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ6YnJrdGNzaHdydGhodXdydnFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2MTM0OTQsImV4cCI6MjA5MzE4OTQ5NH0.e854k3EmraBO64T3BnK19_yO2F3sD2VIGsrMKrRxmg8"

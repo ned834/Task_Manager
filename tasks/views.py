@@ -1,6 +1,28 @@
 from django.shortcuts import render, redirect
 from .models import Task
 from datetime import date
+from supabase import create_client
+from django.conf import settings
+import uuid
+
+supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+
+def upload_to_supabase(file):
+    filename = f"{uuid.uuid4()}_{file.name}"
+
+    file_bytes = file.read() 
+
+    response = supabase.storage.from_("task-images").upload(
+        path=filename,
+        file=file_bytes,
+        file_options={"content-type": file.content_type}
+    )
+
+    print("UPLOAD RESPONSE:", response)
+
+    public_url = supabase.storage.from_("task-images").get_public_url(filename)
+
+    return public_url
 
 
 today = date.today()
@@ -10,11 +32,14 @@ def home(request):
         title = request.POST.get("title")
         due_date = request.POST.get("due_date")
         description = request.POST.get("description")
+        image_file = request.FILES.get("image")
+        image_url = upload_to_supabase(image_file) if image_file else None
 
         if title:
             Task.objects.create(
                 title=title,
                 description=description,
+                image_url=image_url,
                 due_date=due_date if due_date else None
             )
         return redirect("/")
@@ -66,6 +91,11 @@ def edit_task(request, task_id):
         due_date = request.POST.get("due_date")
         task.description = request.POST.get("description")
         task.due_date = due_date if due_date else None
+
+        image_file = request.FILES.get("image")
+        if image_file:
+            task.image_url = upload_to_supabase(image_file)
+
         task.save()
         return redirect("/")
 

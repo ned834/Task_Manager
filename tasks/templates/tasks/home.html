@@ -14,34 +14,46 @@
 
     <!-- Add Task Form -->
     <div class="card p-3 mb-4 shadow-sm">
-        <form method="POST" class="row g-2">
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
+            <div class = "row g-2">
             
-            <div class="col-8">
-                <input type="text" name="title" class="form-control" placeholder="New task..." required>
-            </div>
+                <div class="col-8">
+                    <input type="text" name="title" class="form-control" placeholder="New task..." required>
+                </div>
 
-            <div class="col-4">
-                <input type="date" name="due_date" class="form-control">
-            </div>
+                <div class="col-4">
+                    <input type="date" name="due_date" class="form-control">
+                </div>
+            
 
-            <div class="col-12">
-                <textarea 
-                    name="description" 
-                    class="form-control" 
-                    placeholder="Add description (optional)"
-                    rows="3"
-                ></textarea>
-            </div>
+                <div class="col-12">
+                    <textarea 
+                        name="description" 
+                        class="form-control" 
+                        placeholder="Add description (optional)"
+                        rows="3"
+                    ></textarea>
+                </div>
+                
+                <div class="col-12">
+                    <input 
+                        type="file" 
+                        name="image" 
+                        class="form-control"
+                        accept="image/*"
+                    >
+                </div>
 
-            <div class="col-12 d-flex justify-content-center mt-3">
-                <button type="submit" class="btn btn-primary px-4">
+                <div class="col-12 d-flex justify-content-center mt-3">
+                    <button type="submit" class="btn btn-primary px-4">
                     Add
-                </button>
+                    </button>
+                </div>
             </div>
         </form>
-    </div>
-
+    </div>    
+    
     <!-- Filters -->
     <div class="d-flex justify-content-left gap-2 mb-2">
         <a href="/?filter=active"
@@ -86,6 +98,16 @@
                 {% if task.description %}
                     <div class="text-muted small">
                         {{ task.description }}
+                    </div>
+                {% endif %}
+
+                {% if task.image_url %}
+                    <div class="mt-2">
+                        <img 
+                            src="{{ task.image_url }}" 
+                            class="img-fluid rounded"
+                            style="max-height: 200px; object-fit: cover;"
+                        >
                     </div>
                 {% endif %}
 

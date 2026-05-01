@@ -15,7 +15,7 @@
     <!-- Edit Form -->
     <div class="card p-4 shadow-sm">
 
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
             <div class="mb-3">
@@ -37,6 +37,26 @@
                     rows="3"
                 >{{ task.description }}</textarea>
             </div>
+
+            <div class="mb-3">
+                <label class="form-label">Update Image</label>
+                <input 
+                    type="file" 
+                    name="image" 
+                    class="form-control"
+                    accept="image/*"
+                >
+            </div>
+
+            {% if task.image_url %}
+            <div class="mb-3">
+                <img 
+                    src="{{ task.image_url }}" 
+                    class="img-fluid rounded"
+                    style="max-height: 200px;"
+                >
+            </div>
+            {% endif %}
 
             <div class="mb-4">
                 <label class="form-label">Due Date</label>
