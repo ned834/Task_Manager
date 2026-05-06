@@ -10,7 +10,10 @@
 <div class="container mt-5" style="max-width: 700px;">
 
     <div class="d-flex justify-content-end mb-3">
-        <a href="/logout/" class="btn btn-outline-danger">Logout</a>
+        <form action="/logout/" method="POST" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger">Logout</button>
+        </form>
     </div>
 
     <!-- Title -->

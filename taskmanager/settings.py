@@ -117,5 +117,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/login/"
+
 SUPABASE_URL = "https://bzbrktcshwrthhuwrvqk.supabase.co"
 SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ6YnJrdGNzaHdydGhodXdydnFrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc2MTM0OTQsImV4cCI6MjA5MzE4OTQ5NH0.e854k3EmraBO64T3BnK19_yO2F3sD2VIGsrMKrRxmg8"
+

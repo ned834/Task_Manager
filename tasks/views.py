@@ -29,7 +29,7 @@ def upload_to_supabase(file):
 today = date.today()
 
 #view to display tasks and handle task creation
-@login_required
+@login_required(login_url='/login/')
 def home(request):
     if request.method == "POST":
         title = request.POST.get("title")
