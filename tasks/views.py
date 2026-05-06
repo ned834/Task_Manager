@@ -5,6 +5,7 @@ from supabase import create_client
 from django.conf import settings
 import uuid
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
 
 supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
@@ -79,7 +80,7 @@ def home(request):
 #view to mark a task as complete
 @login_required
 def complete_task(request, task_id):
-    task = Task.objects.get(id=task_id)
+    task = get_object_or_404(Task, id=task_id, user=request.user)
     task.completed = not task.completed
     task.save()
     return redirect("/")
@@ -87,14 +88,14 @@ def complete_task(request, task_id):
 #view to delete a task
 @login_required
 def delete_task(request, task_id):
-    task = Task.objects.get(id=task_id)
+    task = get_object_or_404(Task, id=task_id, user=request.user)
     task.delete()
     return redirect("/")
 
 #view to edit a task
 @login_required
 def edit_task(request, task_id):
-    task = Task.objects.get(id=task_id)
+    task = get_object_or_404(Task, id=task_id, user=request.user)
     if request.method == "POST":
         task.title = request.POST.get("title")
         due_date = request.POST.get("due_date")
@@ -113,7 +114,7 @@ def edit_task(request, task_id):
 #view to recover a completed task
 @login_required
 def recover_task(request, task_id):
-    task = Task.objects.get(id=task_id)
+    task = get_object_or_404(Task, id=task_id, user=request.user)
     task.completed = False
     task.save()
     return redirect("/?filter=active")
@@ -121,5 +122,5 @@ def recover_task(request, task_id):
 #view to mark all tasks as complete
 @login_required
 def complete_all(request):
-    Task.objects.filter(completed=False).update(completed=True)
+    Task.objects.filter(user=request.user, completed=False).update(completed=True)
     return redirect("/?filter=completed")
