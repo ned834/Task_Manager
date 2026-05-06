@@ -4,6 +4,7 @@ from datetime import date
 from supabase import create_client
 from django.conf import settings
 import uuid
+from django.contrib.auth.decorators import login_required
 
 supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
@@ -27,6 +28,8 @@ def upload_to_supabase(file):
 
 today = date.today()
 
+#view to display tasks and handle task creation
+@login_required
 def home(request):
     if request.method == "POST":
         title = request.POST.get("title")
@@ -37,6 +40,7 @@ def home(request):
 
         if title:
             Task.objects.create(
+                user=request.user,
                 title=title,
                 description=description,
                 image_url=image_url,
@@ -45,7 +49,7 @@ def home(request):
         return redirect("/")
 
 
-    tasks = Task.objects.all()
+    tasks = Task.objects.filter(user=request.user)
     filter_type = request.GET.get("filter", "active")
 
     
@@ -72,18 +76,23 @@ def home(request):
         "current_filter": filter_type
     })
 
-
+#view to mark a task as complete
+@login_required
 def complete_task(request, task_id):
     task = Task.objects.get(id=task_id)
     task.completed = not task.completed
     task.save()
     return redirect("/")
 
+#view to delete a task
+@login_required
 def delete_task(request, task_id):
     task = Task.objects.get(id=task_id)
     task.delete()
     return redirect("/")
 
+#view to edit a task
+@login_required
 def edit_task(request, task_id):
     task = Task.objects.get(id=task_id)
     if request.method == "POST":
@@ -101,12 +110,16 @@ def edit_task(request, task_id):
 
     return render(request, "tasks/edit_task.html", {"task": task})
 
+#view to recover a completed task
+@login_required
 def recover_task(request, task_id):
     task = Task.objects.get(id=task_id)
     task.completed = False
     task.save()
     return redirect("/?filter=active")
 
+#view to mark all tasks as complete
+@login_required
 def complete_all(request):
     Task.objects.filter(completed=False).update(completed=True)
     return redirect("/?filter=completed")
