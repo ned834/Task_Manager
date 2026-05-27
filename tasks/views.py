@@ -124,3 +124,10 @@ def recover_task(request, task_id):
 def complete_all(request):
     Task.objects.filter(user=request.user, completed=False).update(completed=True)
     return redirect("/?filter=completed")
+
+#view to search for tasks
+@login_required
+def search_tasks(request):
+    query = request.GET.get("q", "")
+    tasks = Task.objects.filter(user=request.user, title__icontains=query)
+    return render(request, "tasks/home.html", {"tasks": tasks, "query": query})

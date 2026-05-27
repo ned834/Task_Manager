@@ -128,7 +128,7 @@
         <div class="col-lg-8">
 
             <!-- Filters -->
-            <div class="d-flex gap-2 mb-3">
+            <div class="d-flex gap-2 mb-3 align-items-center">
 
                 <a href="/?filter=active"
                     class="btn btn-sm {% if current_filter == 'active' %}btn-success{% else %}btn-outline-success{% endif %}">
@@ -139,8 +139,25 @@
                     class="btn btn-sm {% if current_filter == 'completed' %}btn-secondary{% else %}btn-outline-secondary{% endif %}">
                         Completed
                 </a>
-
+                
+              <!-- Search Form -->
+                <form method="GET" action="{% url 'search_tasks' %}" class="ms-auto">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            name="q" 
+                            class="form-control"
+                            placeholder="Search tasks..."
+                            value="{{ query }}"
+                        >
+                        <button class="btn btn-outline-primary" type="submit">
+                            Search
+                        </button>
+                    </div>
+                </form>
+            
             </div>
+
 
             <!-- Task List -->
             {% for task in tasks %}
