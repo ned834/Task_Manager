@@ -8,6 +8,7 @@ class Task(models.Model):
     image_url = models.URLField(blank=True, null=True)
     completed = models.BooleanField(default=False)
     due_date = models.DateField(null=True, blank=True)
+    color = models.CharField(max_length=20, default="white")
 
     def __str__(self):
         return self.title

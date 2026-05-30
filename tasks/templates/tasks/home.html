@@ -36,6 +36,30 @@
         .task-description {
             font-size: 0.95rem;
         }
+
+        .card-color-white {
+            background: white;
+        }
+
+        .card-color-blue {
+            background: #e7f1ff;
+        }
+
+        .card-color-green {
+            background: #e8f8ef;
+        }
+
+        .card-color-yellow {
+            background: #fff8dd;
+        }
+
+        .card-color-red {
+            background: #ffe8e8;
+        }
+
+        .card-color-purple {
+            background: #f3e8ff;
+        }
     </style>
 </head>
 
@@ -80,7 +104,7 @@
                                 type="text" 
                                 name="title" 
                                 class="form-control"
-                                placeholder="New task..."
+                                placeholder="Enter task title"
                                 required
                             >
                         </div>
@@ -109,6 +133,19 @@
                                 class="form-control"
                                 accept="image/*"
                             >
+                        </div>
+
+                        <div class="col-12 pt-4">
+                            <label class="form-label">Task Color</label>
+
+                            <select name="color" class="form-select">
+                                <option value="white">Default</option>
+                                <option value="blue">Blue</option>
+                                <option value="green">Green</option>
+                                <option value="yellow">Yellow</option>
+                                <option value="red">Red</option>
+                                <option value="purple">Purple</option>
+                            </select>
                         </div>
 
                         <div class="col-12 d-flex justify-content-center mt-3">
@@ -162,7 +199,7 @@
             <!-- Task List -->
             {% for task in tasks %}
 
-            <div class="card p-4 shadow-sm mb-3 border-0 task-card">
+            <div class="card p-4 shadow-sm mb-3 border-0 task-card card-color-{{ task.color }}">
 
                 <div class="d-flex justify-content-between align-items-start">
 

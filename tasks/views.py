@@ -45,7 +45,8 @@ def home(request):
                 title=title,
                 description=description,
                 image_url=image_url,
-                due_date=due_date if due_date else None
+                due_date=due_date if due_date else None,
+                color=request.POST.get("color", "white")
             )
         return redirect("/")
 
