@@ -44,7 +44,7 @@
         .card-color-blue {
             background: #e7f1ff;
         }
-
+        
         .card-color-green {
             background: #e8f8ef;
         }
@@ -60,6 +60,59 @@
         .card-color-purple {
             background: #f3e8ff;
         }
+
+        .dark-mode .card-color-blue {
+            background: #1f3b5f !important;
+        }
+
+        .dark-mode .card-color-green {
+            background: #1f4f3d !important;
+        }
+
+        .dark-mode .card-color-yellow {
+            background: #5a4b1a !important;
+        }
+
+        .dark-mode .card-color-red {
+            background: #5a2323 !important;
+        }
+
+        .dark-mode .card-color-purple {
+            background: #43285c !important;
+        }
+
+        .dark-mode .card-color-white {
+            background: #2b2b2b !important;
+        }
+
+        .dark-mode {
+            background: #121212 !important;
+            color: #f8f9fa;
+        }
+
+        .dark-mode .card {
+            background: #1e1e1e;
+            color: #f8f9fa;
+        }
+
+        .dark-mode .text-muted {
+            color: #b0b0b0 !important;
+        }
+
+        .dark-mode .form-control,
+        .dark-mode .form-select {
+            background: #2b2b2b;
+            color: #aaa;
+            border-color: #444;
+        }
+
+        .dark-mode .form-control::placeholder {
+            color: #aaa;
+        }
+
+        .dark-mode .navbar {
+            background: #1e1e1e !important;
+        }
     </style>
 </head>
 
@@ -73,14 +126,20 @@
         <span class="navbar-brand mb-0 h4 fw-semibold">
             Task Manager
         </span>
-
-        <form action="/logout/" method="POST" class="m-0">
-            {% csrf_token %}
-
-            <button type="submit" class="btn btn-outline-light">
-                Logout
+        
+        <div class="ms-auto d-flex align-items-center gap-2">
+            <button id="darkModeToggle" class="btn btn-outline-light">
+                Dark Mode
             </button>
-        </form>
+
+            <form action="/logout/" method="POST" class="m-0">
+                {% csrf_token %}
+
+                <button type="submit" class="btn btn-outline-light">
+                    Logout
+                </button>
+            </form>
+        </div>
 
     </nav>
 
@@ -184,7 +243,7 @@
                             type="text" 
                             name="q" 
                             class="form-control"
-                            placeholder="Search tasks..."
+                            placeholder="Search task"
                             value="{{ query }}"
                         >
                         <button class="btn btn-outline-primary" type="submit">
@@ -310,6 +369,30 @@
     </div>
 
 </div>
+
+<script>
+const toggleButton = document.getElementById("darkModeToggle");
+
+// Load saved preference
+if (localStorage.getItem("darkMode") === "enabled") {
+    document.body.classList.add("dark-mode");
+    toggleButton.innerHTML = "Light Mode";
+}
+
+toggleButton.addEventListener("click", () => {
+    document.body.classList.toggle("dark-mode");
+
+    const enabled = document.body.classList.contains("dark-mode");
+
+    localStorage.setItem(
+        "darkMode",
+        enabled ? "enabled" : "disabled"
+    );
+
+    toggleButton.innerHTML =
+        enabled ? "Light Mode" : "Dark Mode";
+});
+</script>
 
 </body>
 </html>

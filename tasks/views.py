@@ -102,6 +102,7 @@ def edit_task(request, task_id):
         due_date = request.POST.get("due_date")
         task.description = request.POST.get("description")
         task.due_date = due_date if due_date else None
+        task.color = request.POST.get("color", "white")
 
         image_file = request.FILES.get("image")
         if image_file:
