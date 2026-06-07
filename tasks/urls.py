@@ -9,6 +9,7 @@ urlpatterns = [
     path('recover/<int:task_id>/', views.recover_task, name='recover'),
     path('complete_all/', views.complete_all, name='complete_all'),
     path('search/', views.search_tasks, name='search_tasks'),
+    path("task/<int:task_id>/json/", views.task_json, name="task_json"),
 
 
 ]

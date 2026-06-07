@@ -6,6 +6,7 @@ from django.conf import settings
 import uuid
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
+from django.http import JsonResponse
 
 supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
@@ -26,6 +27,20 @@ def upload_to_supabase(file):
 
     return public_url
 
+
+def task_json(request, task_id):
+    task = Task.objects.get(id=task_id)
+
+    return JsonResponse({
+        "title": task.title,
+        "description": task.description or "",
+        "due_date": (
+            task.due_date.strftime("%Y-%m-%d")
+            if task.due_date else ""
+        ),
+        "image_url": task.image_url or "",
+        "color": task.color,
+    })
 
 today = date.today()
 
@@ -98,11 +113,15 @@ def delete_task(request, task_id):
 def edit_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
     if request.method == "POST":
+
         task.title = request.POST.get("title")
         due_date = request.POST.get("due_date")
         task.description = request.POST.get("description")
         task.due_date = due_date if due_date else None
         task.color = request.POST.get("color", "white")
+
+        if request.POST.get("remove_image"):
+            task.image_url = ""
 
         image_file = request.FILES.get("image")
         if image_file:

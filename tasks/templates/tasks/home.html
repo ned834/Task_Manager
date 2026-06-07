@@ -113,6 +113,37 @@
         .dark-mode .navbar {
             background: #1e1e1e !important;
         }
+
+        .dark-mode .modal-content {
+            background-color: #1e1e1e;
+            color: #f8f9fa;
+            border-color: #444;
+        }
+
+        .dark-mode .modal-header {
+            border-bottom-color: #444;
+        }
+
+        .dark-mode .modal-footer {
+            border-top-color: #444;
+        }
+
+        .dark-mode .btn-close {
+            filter: invert(1);
+        }
+
+        .dark-mode .modal-content .form-control,
+        .dark-mode .modal-content .form-select {
+            background-color: #2b2b2b;
+            color: white;
+            border-color: #444;
+        }
+
+        .dark-mode .modal-content .form-control:focus,
+        .dark-mode .modal-content .form-select:focus {
+            background-color: #2b2b2b;
+            color: white;
+        }
     </style>
 </head>
 
@@ -332,9 +363,13 @@
                                 ✔
                             </a>
 
-                            <a href="{% url 'edit' task.id %}" class="btn btn-outline-warning btn-sm">
+                            <button
+                                class="btn btn-outline-warning btn-sm edit-btn"
+                                data-id="{{ task.id }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editModal">
                                 Edit
-                            </a>
+                            </button>
 
                             <a href="{% url 'delete' task.id %}" class="btn btn-outline-danger btn-sm">
                                 ✖
@@ -370,6 +405,111 @@
 
 </div>
 
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <form id="editForm" method="POST" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Task</h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input
+                        type="text"
+                        name="title"
+                        id="editTitle"
+                        class="form-control mb-3"
+                        required
+                    >
+
+                    <textarea
+                        name="description"
+                        id="editDescription"
+                        class="form-control mb-3"
+                        rows="3">
+                    </textarea>
+
+                    <input
+                        type="date"
+                        name="due_date"
+                        id="editDueDate"
+                        class="form-control mb-3"
+                    >
+
+                    <div id="currentImageContainer" class="mb-3 text-center">
+                        <img
+                            id="currentImage"
+                            class="img-fluid rounded"
+                            style="max-height: 200px; display: none;"
+                        >
+                    </div>
+
+                    <input 
+                        type="file" 
+                        name="image" 
+                        class="form-control mb-3"
+                        accept="image/*"
+                    >
+
+                    <select
+                        name="color"
+                        id="editColor"
+                        class="form-select"
+                    >
+                        <option value="white">Default</option>
+                        <option value="blue">Blue</option>
+                        <option value="green">Green</option>
+                        <option value="yellow">Yellow</option>
+                        <option value="red">Red</option>
+                        <option value="purple">Purple</option>
+                    </select>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                        Cancel
+                    </button>
+
+                    <button
+                        id="removeImageBtn"
+                        type="submit"
+                        name="remove_image"
+                        value="true"
+                        class="btn btn-outline-danger"
+                        style="display:none;">
+                        Remove Image & Save
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+                        Save
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+
 <script>
 const toggleButton = document.getElementById("darkModeToggle");
 
@@ -393,6 +533,62 @@ toggleButton.addEventListener("click", () => {
         enabled ? "Light Mode" : "Dark Mode";
 });
 </script>
+
+<script>
+document.querySelectorAll(".edit-btn").forEach(button => {
+
+    button.addEventListener("click", async () => {
+
+        const taskId = button.dataset.id;
+        const image = document.getElementById("currentImage");
+        const removeBtn = document.getElementById("removeImageBtn");
+
+        const response =
+            await fetch(`/task/${taskId}/json/`);
+
+        const task =
+            await response.json();
+
+        document.getElementById("editTitle").value =
+            task.title;
+
+        document.getElementById("editDescription").value =
+            task.description;
+
+        document.getElementById("editDueDate").value =
+            task.due_date;
+        
+
+        if (task.image_url) {
+            image.src = task.image_url;
+            image.style.display = "block";
+        } else {
+            image.style.display = "none";
+        }
+
+        document.getElementById("editColor").value =
+            task.color;
+
+        document.getElementById("editForm").action =
+            `/edit/${taskId}/`;
+        
+    
+        if (task.image_url) {
+            image.src = task.image_url;
+            image.style.display = "block";
+            removeBtn.style.display = "inline-block";
+        } else {
+            image.style.display = "none";
+            removeBtn.style.display = "none";
+        }
+
+    });
+
+});
+
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
