@@ -152,3 +152,14 @@ def search_tasks(request):
     query = request.GET.get("q", "")
     tasks = Task.objects.filter(user=request.user, title__icontains=query)
     return render(request, "tasks/home.html", {"tasks": tasks, "query": query})
+
+#view to clear all completed tasks
+@login_required
+def clear_completed(request):
+    Task.objects.filter(user=request.user, completed=True).delete()
+    return redirect("/?filter=active")
+
+#view to return home
+@login_required
+def return_home(request):
+    return redirect("/")

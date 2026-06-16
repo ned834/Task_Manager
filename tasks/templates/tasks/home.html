@@ -386,15 +386,29 @@
             {% empty %}
 
                 <p class="text-center text-muted mt-4">
-                    No tasks yet
+                    No tasks
                 </p>
 
             {% endfor %}
 
-            {% if current_filter != "completed" and tasks %}
+            {% if query %}
+                <div class="text-center mt-4">
+                    <a href="{% url 'return_home' %}" class="btn btn-outline-secondary">
+                        Return Home
+                    </a>
+                </div>
+            {% elif current_filter != "completed" and tasks %}
                 <div class="text-center mt-4">
                     <a href="{% url 'complete_all' %}" class="btn btn-outline-success">
                         Complete All
+                    </a>
+                </div>
+            {% endif %}
+
+            {% if current_filter == "completed" and tasks %}
+                <div class="text-center mt-4">
+                    <a href="{% url 'clear_completed' %}" class="btn btn-outline-danger">
+                        Clear All
                     </a>
                 </div>
             {% endif %}
@@ -406,7 +420,7 @@
 </div>
 
 <div class="modal fade" id="editModal" tabindex="-1">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
 
             <form id="editForm" method="POST" enctype="multipart/form-data">
@@ -447,7 +461,7 @@
                         class="form-control mb-3"
                     >
 
-                    <div id="currentImageContainer" class="mb-3 text-center">
+                    <div id="currentImageContainer" class="mb-3 d-flex justify-content-center">
                         <img
                             id="currentImage"
                             class="img-fluid rounded"
@@ -557,14 +571,6 @@ document.querySelectorAll(".edit-btn").forEach(button => {
 
         document.getElementById("editDueDate").value =
             task.due_date;
-        
-
-        if (task.image_url) {
-            image.src = task.image_url;
-            image.style.display = "block";
-        } else {
-            image.style.display = "none";
-        }
 
         document.getElementById("editColor").value =
             task.color;
