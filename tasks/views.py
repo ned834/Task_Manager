@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 
+
 supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
 
 def upload_to_supabase(file):
@@ -68,6 +69,7 @@ def home(request):
 
     tasks = Task.objects.filter(user=request.user)
     filter_type = request.GET.get("filter", "active")
+    current_sort = request.GET.get("sort", "date")
 
     
     if filter_type == "completed":
@@ -75,22 +77,27 @@ def home(request):
     else:
         tasks = Task.objects.filter(completed=False)
     
-    tasks = sorted(
-        tasks,
-        key=lambda task: (
-            task.completed,
-            0 if task.due_date and task.due_date < today else
-            1 if task.due_date == today else
-            2 if task.due_date else
-            3,
-            task.due_date or today
+    if current_sort == "color":
+        tasks = tasks.order_by("color", "due_date")
+    else:
+        
+        tasks = sorted(
+            tasks,
+            key=lambda task: (
+                task.completed,
+                0 if task.due_date and task.due_date < today else
+                1 if task.due_date == today else
+                2 if task.due_date else
+                3,
+                task.due_date or today
+            )
         )
-    )
 
     return render(request, "tasks/home.html", {
         "tasks": tasks,
         "today": today,
-        "current_filter": filter_type
+        "current_filter": filter_type,
+        "current_sort": current_sort
     })
 
 #view to mark a task as complete

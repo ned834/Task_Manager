@@ -101,9 +101,10 @@
 
         .dark-mode .form-control,
         .dark-mode .form-select {
-            background: #2b2b2b;
+            background-color: #2b2b2b;
             color: #aaa;
             border-color: #444;
+
         }
 
         .dark-mode .form-control::placeholder {
@@ -256,7 +257,7 @@
 
             <!-- Filters -->
             <div class="d-flex gap-2 mb-3 align-items-center">
-
+                
                 <a href="/?filter=active"
                     class="btn btn-sm {% if current_filter == 'active' %}btn-success{% else %}btn-outline-success{% endif %}">
                         Active
@@ -267,7 +268,27 @@
                         Completed
                 </a>
                 
-              <!-- Search Form -->
+               <form method="GET" class="ms-2">
+
+                    <input type="hidden" name="filter" value="{{ current_filter }}">
+
+                    <select name="sort" class="form-select form-select-sm" onchange="this.form.submit()" style="width: 170px;">
+
+                        <option value="date" {% if current_sort == "date" %}selected{% endif %}>
+                            Date
+                        </option>
+
+                        <option value="color" {% if current_sort == "color" %}selected{% endif %}>
+                            Color
+                        </option>
+
+                    </select>
+
+                </form>
+
+                
+                
+                <!-- Search Form -->
                 <form method="GET" action="{% url 'search_tasks' %}" class="ms-auto">
                     <div class="input-group">
                         <input 
