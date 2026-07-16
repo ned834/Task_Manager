@@ -12,6 +12,7 @@ urlpatterns = [
     path("task/<int:task_id>/json/", views.task_json, name="task_json"),
     path("clear_completed/", views.clear_completed, name="clear_completed"),
     path("return_home/", views.return_home, name="return_home"),
+    path("register/", views.register, name="register"),
 
 ]
 

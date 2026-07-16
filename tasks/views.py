@@ -7,6 +7,10 @@ import uuid
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
+from django.contrib.auth.forms import UserCreationForm
+from django.shortcuts import render, redirect
+from .forms import RegisterForm
+
 
 
 supabase = create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
@@ -29,8 +33,13 @@ def upload_to_supabase(file):
     return public_url
 
 
+@login_required
 def task_json(request, task_id):
-    task = Task.objects.get(id=task_id)
+    task = get_object_or_404(
+        Task,
+        id=task_id,
+        user=request.user
+    )
 
     return JsonResponse({
         "title": task.title,
@@ -73,9 +82,9 @@ def home(request):
 
     
     if filter_type == "completed":
-        tasks = Task.objects.filter(completed=True)
+        tasks = tasks.filter(completed=True)
     else:
-        tasks = Task.objects.filter(completed=False)
+        tasks = tasks.filter(completed=False)
     
     if current_sort == "color":
         tasks = tasks.order_by("color", "due_date")
@@ -170,3 +179,19 @@ def clear_completed(request):
 @login_required
 def return_home(request):
     return redirect("/")
+
+
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect("login")
+
+    else:
+        form = RegisterForm()
+
+    return render(request, "tasks/register.html", {
+        "form": form
+    })
