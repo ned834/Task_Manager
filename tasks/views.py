@@ -32,6 +32,21 @@ def upload_to_supabase(file):
 
     return public_url
 
+def delete_from_supabase(image_url):
+    if not image_url:
+        return
+
+    try:
+        file_path = image_url.split("/object/public/task-images/")[1]
+
+        print("Deleting file from Supabase:", file_path)
+
+        response = supabase.storage.from_("task-images").remove([file_path])
+
+        print("DELETE RESPONSE:", response)
+
+    except Exception as e:
+        print("Delete failed:", e)
 
 @login_required
 def task_json(request, task_id):
@@ -121,6 +136,9 @@ def complete_task(request, task_id):
 @login_required
 def delete_task(request, task_id):
     task = get_object_or_404(Task, id=task_id, user=request.user)
+    if task.image_url:
+        delete_from_supabase(task.image_url)
+
     task.delete()
     return redirect("/")
 
@@ -137,10 +155,14 @@ def edit_task(request, task_id):
         task.color = request.POST.get("color", "white")
 
         if request.POST.get("remove_image"):
+            delete_from_supabase(task.image_url)
             task.image_url = ""
 
         image_file = request.FILES.get("image")
         if image_file:
+            if task.image_url:
+                delete_from_supabase(task.image_url)
+
             task.image_url = upload_to_supabase(image_file)
 
         task.save()
